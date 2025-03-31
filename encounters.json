@@ -1,0 +1,33 @@
+[
+    {
+        "name": "Encounter 123",
+        "danger_level": 3,
+        "enemy_count": 2,
+        "type": "combat",
+        "ships": [
+            {
+                "name": "test123",
+                "start_fuel": 100
+            },
+            {
+                "name": "ship 2"
+            }
+        ]
+    },
+    {
+        "name" : "Shop", 
+        "type" : "shop",
+        "items" : [
+            {
+                "name" : "1",
+                "price" : 1,
+                "desc" : ""
+            },
+            {
+                "name" : "2",
+                "price" : 1,
+                "desc" : ""
+            }
+        ]
+    }
+]
