@@ -43,6 +43,9 @@ class ShoppingEncounter(Encounter):
         self.ships = list()
         self.items = items
 
+    def __repr__(self):
+        return f'{self.name}, {self.items}'
+
     def display_shop(self): 
         print(f"\n --- {self.name} Shop ---")
         for i, item in enumerate(self.items,start=1):
@@ -102,21 +105,9 @@ class ShoppingEncounter(Encounter):
 
             return choice
 
-
-
-
-
-
-
-
-
     @staticmethod
     def select_from_ship():
         pass
-
-
-
-
 
     @staticmethod
     def ask_amount(item_name):
@@ -206,6 +197,7 @@ def encounters_from_json(file_path: str) -> list[Encounter]:
         
 class Map:
     available_encounters: list[Encounter]
+    unlocked_area: list[tuple]
 
     def __init__(self, depth: int, max_width: int):
         self.available_encounters = encounters_from_json("encounters.json")
@@ -213,6 +205,7 @@ class Map:
         self.depth = depth
         self.max_width = max_width
         self.current_position = 0,0
+        self.unlocked_area = list()
         for group in range(depth):
             encounters_per_group = random.randint(1, max_width)
             self.map.append(
@@ -235,8 +228,9 @@ class Map:
                 if x < len(level):
                     if (x, y) == self.current_position:
                         encounter_str += f"[🚀] "  # Highlight current position with a spaceship emoji
-                    # elif (x, y) in self.unlocked_areas:
-                        # encounter_str += f"[✓] "  # Mark unlocked areas with a tick
+                        self.unlocked_area.append(self.current_position)  # (x,y) into unlocked_area list
+                    elif (x, y) in self.unlocked_area:
+                        encounter_str += f"[✓] "  # Mark unlocked areas with a tick
                     else:
                         encounter_str += f"[X] "  # Mark locked areas with an X
                 else:
@@ -264,6 +258,18 @@ class Map:
         print(f"Moved {direction} ---- Now at {x,y}")
         print()
         self.display()
+        print(f'## Type of map ## {type(self.map)=}\n\n')
+        # Show what is the type of the stuff inside of your list in the self.map
+        for i, m in enumerate(self.map):
+            print(f'{i} #### {type(m)=}')
+        print("##### inside the 2nd depth lists")
+        
+        for i, e in enumerate(self.map[x]):
+            print(f'{i} #### {type(e)=}')
+
+        print(self.map)
+        print()
+        print(self.map[x])
         return self.map[x][y]
 
 class Planet:
