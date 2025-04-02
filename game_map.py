@@ -201,7 +201,7 @@ class Map:
 
     def __init__(self, depth: int, max_width: int):
         self.available_encounters = encounters_from_json("encounters.json")
-        self.map = [] # list of lists of available encounters
+        self.map: list[list[Encounter]] = [] # list of lists of available encounters
         self.depth = depth
         self.max_width = max_width
         self.current_position = 0,0
@@ -223,7 +223,6 @@ class Map:
         for y, level in enumerate(self.map):
             spacing = " " * ((self.max_width - len(level)) * 4)
             encounter_str = spacing
-            
             for x in range(self.max_width):
                 if x < len(level):
                     if (x, y) == self.current_position:
@@ -232,8 +231,16 @@ class Map:
                     elif (x, y) in self.unlocked_area:
                         encounter_str += f"[✓] "  # Mark unlocked areas with a tick
                     else:
-                        encounter_str += f"[X] "  # Mark locked areas with an X
+                        encounter = self.map[y][x]
+                        if isinstance(encounter,ShoppingEncounter):
+                            encounter_str += f"[💰] " # Marks Shops with a 💰
+                        else:
+                            encounter_str += f"[X] "  # Mark locked areas with an X
                 else:
+                    # to check whether it's a shopping encounter use:
+
+                        
+
                     encounter_str += "    "  # Keep spacing aligned
             
             print(encounter_str)
@@ -245,32 +252,35 @@ class Map:
         x,y = self.current_position
         if direction == "right" and x < len(self.map[y]) - 1:
             x += 1
+            print(f"Moved {direction} ---- Now at {x,y}")
+
         elif direction == "left" and x > 0:
             x -= 1
+            print(f"Moved {direction} ---- Now at {x,y}")
+
         elif direction == "down" and y < len(self.map) - 1:
             y += 1
+            print(f"Moved {direction} ---- Now at {x,y}")
+
         else:
             print("You can't move!")
 
         self.current_position = (x,y)
 
-        print()
-        print(f"Moved {direction} ---- Now at {x,y}")
-        print()
         self.display()
-        print(f'## Type of map ## {type(self.map)=}\n\n')
+        # print(f'## Type of map ## {type(self.map)=}\n\n')
         # Show what is the type of the stuff inside of your list in the self.map
         for i, m in enumerate(self.map):
             print(f'{i} #### {type(m)=}')
         print("##### inside the 2nd depth lists")
         
-        for i, e in enumerate(self.map[x]):
+
+        for i, e in enumerate(self.map[2]): 
             print(f'{i} #### {type(e)=}')
 
-        print(self.map)
-        print()
-        print(self.map[x])
-        return self.map[x][y]
+ 
+
+        return self.map[y][x]
 
 class Planet:
     levels: Map
