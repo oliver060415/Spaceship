@@ -37,14 +37,15 @@ class Spaceship:
 
         print("=====================")
 
-    def travel(self,map):
-        fuel_needed = 100*map.current_position[1]
+    def travel(self,game_map):
+        fuel_needed = 100*game_map.current_position[1]
         if self.fuel >= fuel_needed:
             self.fuel -= fuel_needed
-            map.navigate()
+            direction = input("Move (left, right, down): ").strip().lower()
+            return game_map.navigate(direction)
         else:
-            raise RuntimeError("YOU LOSE (ran out of fuel ending)")
-            
+            raise RuntimeError("YOU LOSE (ran out of fuel.)")
+             
 if __name__ == "__main__":
     pass
     # encounters = encounters_from_json("encounters.json")

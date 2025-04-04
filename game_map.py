@@ -57,7 +57,7 @@ class ShoppingEncounter(Encounter):
             if spaceship.money >= total_cost:
                 spaceship.money -= total_cost
                 spaceship.inventory[item.name] = spaceship.inventory.get(item.name, 0) + amount
-                print(f"You bought {amount} {item.name}(s) for {total_cost} credits!")
+                print(f"Hello {spaceship.name}, you just bought {amount} {item.name}(s) for {total_cost} credits!")
             else:
                 print("Not enough money!")
 
@@ -248,39 +248,44 @@ class Map:
         
         print("\n==========================\n")
 
-    def navigate(self,direction):
-        x,y = self.current_position
-        if direction == "right" and x < len(self.map[y]) - 1:
-            x += 1
-            print(f"Moved {direction} ---- Now at {x,y}")
+    def navigate(self, direction):
+        x, y = self.current_position
 
-        elif direction == "left" and x > 0:
-            x -= 1
-            print(f"Moved {direction} ---- Now at {x,y}")
+        if direction == "right":
+            if x + 1 < len(self.map[y]):  # Ensure x doesnt exceed row length
+                x += 1
+            else:
+                print("You can't move right!")
+                return
+        
+        elif direction == "left":
+            if x > 0:
+                x -= 1
+            else:
+                print("You can't move left!")
+                return
 
-        elif direction == "down" and y < len(self.map) - 1:
-            y += 1
-            print(f"Moved {direction} ---- Now at {x,y}")
+        elif direction == "down":
+            if y + 1 < len(self.map) and x < len(self.map[y + 1]):
+                y += 1
+            else:
+                print("You can't move down!")
+                return
 
         else:
-            print("You can't move!")
+            print("Invalid direction! Use 'left', 'right', or 'down'.")
+            return
 
-        self.current_position = (x,y)
+        self.current_position = (x, y)
+        if (x, y) not in self.unlocked_area:
+            self.unlocked_area.append((x, y))  
+
+        print(f"Moved {direction} ---- Now at {self.current_position}")
 
         self.display()
-        # print(f'## Type of map ## {type(self.map)=}\n\n')
-        # Show what is the type of the stuff inside of your list in the self.map
-        for i, m in enumerate(self.map):
-            print(f'{i} #### {type(m)=}')
-        print("##### inside the 2nd depth lists")
-        
 
-        for i, e in enumerate(self.map[2]): 
-            print(f'{i} #### {type(e)=}')
+        return self.map[y][x] 
 
- 
-
-        return self.map[y][x]
 
 class Planet:
     levels: Map
@@ -293,6 +298,5 @@ if __name__ == "__main__":
     game_map = Map(depth=5, max_width=3)
     game_map.display() 
 
-    while True:
-        game_map.navigate(input("Move (left, right, down): ").strip().lower())
+
 
