@@ -1,0 +1,57 @@
+def navigate(self, direction):
+    x, y = self.current_position
+
+    if direction == "right":
+        if x + 1 < len(self.map[y]):  # Ensure x doesn't exceed row length
+            x += 1
+        else:
+            print("You can't move right!")
+            return
+    
+    elif direction == "left":
+        if x > 0:
+            x -= 1
+        else:
+            print("You can't move left!")
+            return
+
+    elif direction == "down":
+        if y + 1 < len(self.map) and x < len(self.map[y + 1]):  
+            y += 1i
+        else:
+            print("You can't move down!")
+            return
+
+    else:
+        print("Invalid direction! Use 'left', 'right', or 'down'.")
+        return
+
+    self.current_position = (x, y)
+    if (x, y) not in self.unlocked_area:
+        self.unlocked_area.append((x, y))  
+
+    print(f"Moved {direction} ---- Now at {self.current_position}")
+
+    self.display()
+
+    return self.map[y][x] 
+
+
+##### expination ##############
+# Ensure that we don't go out of bounds for the current row
+if x >= len(self.map[y]):
+x = len(self.map[y]) - 1
+This checks if x (the horizontal position) is beyond the current encounters in the current row (self.map[y]). If x is greater than the number of encounters, it corrects this by setting x to be the last good index in that row. This prevents an attempt to access an index that doesn't exist, which would cause an error.
+
+# Ensure we don't walk off the edge vertically
+if y >= len(self.map):
+y = len(self.map) - 1
+Similarly, this checks if y (vertical position) is larger than the  number of rows If y is too large, it corrects by setting y to the last valid row. This prevents us from attempting to access an invalid row, which would result in crashes
+
+# Ensure we don't select an empty column (out of bounds check)
+if x >= len(self.map[y]):
+print("You can't move here! No encounter exists.")
+return self.map[self.current_position[1]][self.current_position[0]] # Stay in place
+This is a final defense: after having altered x, it re-verifies that x is still valid for the present row In case there's no encounter at (x, y), it prints a message and prevents movement by returning the current encounter instead of a new one
+
+These additions correct the problem where the player might attempt to move into invalid spaces
